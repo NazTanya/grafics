@@ -1,0 +1,2 @@
+﻿Source.obj : error LNK2019: ссылка на неразрешенный внешний символ _auxDIBImageLoadA@4 в функции "void __cdecl LoadTextures(void)" (?LoadTextures@@YAXXZ)
+C:\Users\Таня\Documents\Visual Studio 2015\Projects\сomputer_grafics_1\Debug\Computer_grafics.exe : fatal error LNK1120: неразрешенных внешних элементов: 1
