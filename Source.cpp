@@ -42,6 +42,30 @@ void Reshape(GLint w, GLint h) {
 	glLoadIdentity();
 }
 
+//перемещение примитива вверх
+void MoveUp() {
+	for (int j = 0; j < v[active].coordinates.size(); j++)
+		v[active].coordinates[j].y += 5;
+}
+
+//перемещение примитива вниз
+void MoveDown() {
+	for (int j = 0; j < v[active].coordinates.size(); j++)
+		v[active].coordinates[j].y -= 5;
+}
+
+//перемещение примитива влево
+void MoveLeft() {
+	for (int j = 0; j < v[active].coordinates.size(); j++)
+		v[active].coordinates[j].x -= 5;
+}
+
+//перемещение примитива вправо
+void MoveRight() {
+	for (int j = 0; j < v[active].coordinates.size(); j++)
+		v[active].coordinates[j].x += 5;
+}
+
 //processing the message from keyboard
 void Keyboard_normal(unsigned char key, int x, int y) {
 	GLint max = 0, min = 255;
@@ -57,7 +81,6 @@ void Keyboard_normal(unsigned char key, int x, int y) {
 			for (int i = 0; i < v[active].coordinates.size(); i++)
 				v[active].coordinates[i].red += 5;
 	}
-		//if(colors[active].red + 5 < 255)	 colors[active].red += 5;
 	if (key == 'g')
 	{
 		for (int i = 0; i < v[active].coordinates.size(); i++) {
@@ -67,8 +90,7 @@ void Keyboard_normal(unsigned char key, int x, int y) {
 		if (max + 5 < 255)
 			for (int i = 0; i < v[active].coordinates.size(); i++)
 				v[active].coordinates[i].green += 5;
-	}
-		//if (colors[active].green + 5 < 255)	 colors[active].green += 5; 
+	} 
 	if (key == 'b') 
 	{
 		for (int i = 0; i < v[active].coordinates.size(); i++) {
@@ -79,7 +101,6 @@ void Keyboard_normal(unsigned char key, int x, int y) {
 			for (int i = 0; i < v[active].coordinates.size(); i++)
 				v[active].coordinates[i].blue += 5;
 	}
-		//if (colors[active].blue + 5 < 255)	 colors[active].blue += 5; 
 	if (key == 't')
 	{
 		for (int i = 0; i < v[active].coordinates.size(); i++) {
@@ -90,7 +111,6 @@ void Keyboard_normal(unsigned char key, int x, int y) {
 			for (int i = 0; i < v[active].coordinates.size(); i++)
 				v[active].coordinates[i].red -= 5;
 	}
-		//if (colors[active].red - 5 > 0)		 colors[active].red -= 5; 
 	if (key == 'h') 
 	{
 		for (int i = 0; i < v[active].coordinates.size(); i++) {
@@ -101,7 +121,6 @@ void Keyboard_normal(unsigned char key, int x, int y) {
 			for (int i = 0; i < v[active].coordinates.size(); i++)
 				v[active].coordinates[i].green -= 5;
 	}
-		//if (colors[active].green - 5 > 0)	 colors[active].green -= 5; 
 	if (key == 'n') 
 	{
 		for (int i = 0; i < v[active].coordinates.size(); i++) {
@@ -112,7 +131,6 @@ void Keyboard_normal(unsigned char key, int x, int y) {
 			for (int i = 0; i < v[active].coordinates.size(); i++)
 				v[active].coordinates[i].blue -= 5;
 	}
-		//if (colors[active].blue - 5 > 0)	 colors[active].blue -= 5; 
 
 	//changing the width of line
 	if (key == 'x')
@@ -127,18 +145,10 @@ void Keyboard_normal(unsigned char key, int x, int y) {
 	if (key == 52)		lineTypeVec[active].type = 0x1C47;
 
 	//changing the position of points
-	if (key == 'w') 
-		for(int j = 0; j < v[active].coordinates.size();j++)
-			v[active].coordinates[j].y += 5;
-	if (key == 's') 
-		for (int j = 0; j < v[active].coordinates.size(); j++)
-			v[active].coordinates[j].y -= 5;
-	if (key == 'a') 
-		for (int j = 0; j < v[active].coordinates.size(); j++)
-			v[active].coordinates[j].x -= 5;
-	if (key == 'd') 
-		for (int j = 0; j < v[active].coordinates.size(); j++)
-			v[active].coordinates[j].x += 5;
+	if (key == 'w')		MoveUp();
+	if (key == 's')		MoveDown();
+	if (key == 'a')		MoveLeft();
+	if (key == 'd')		MoveRight();
 
 	//deleteDelete_Group();
 	if (key == 127) {
@@ -183,7 +193,7 @@ void Keyboard_special(int key, int x, int y)
 	glutPostRedisplay();
 }
 
-//
+//поиск ближайшей точки
 void processChangePointMenu(point p) {
 	int min_distance = 500000, distance;
 	for (int j = 0; j < v[active].coordinates.size(); j++)
@@ -218,7 +228,6 @@ void LoadTextures() {
 	glTexCoord2d(1, 1); glVertex3d(5, 5, -0.1);
 	glTexCoord2d(1, 0); glVertex3d(5, -5, -0.1);
 	glEnd();
-
 }
 
 //processing the message from mouse
@@ -362,6 +371,29 @@ void processTypeMenu(int option) {
 	glutPostRedisplay();
 }
 
+//подменю перемещений
+void processMoveMenu(int option) {
+	switch (option) {
+	case MOVE_UP: {
+		MoveUp();
+		break;
+	}
+	case MOVE_DOWN: {
+		MoveDown();
+		break;
+	}
+	case MOVE_LEFT: {
+		MoveLeft();
+		break;
+	}
+	case MOVE_RIGHT: {
+		MoveRight();
+		break;
+	}
+	}
+	glutPostRedisplay();
+}
+
 //главное меню
 void processMainMenu(int option) {
 	if (option == 204)
@@ -464,6 +496,7 @@ void createMenu()
 	int width_menu;
 	int color_menu;
 	int type_menu;
+	int move_menu;
 	int change_point = 204;
 	int change_point_color = 18;
 
@@ -496,6 +529,12 @@ void createMenu()
 	glutAddMenuEntry("Black", BLACK);
 	glutAddMenuEntry("Pink", PINK);
 
+	//подменю перемещения
+	move_menu = glutCreateMenu(processMoveMenu);
+	glutAddMenuEntry("Up", MOVE_UP);//добавить пункты подменю
+	glutAddMenuEntry("Down", MOVE_DOWN);
+	glutAddMenuEntry("Left", MOVE_LEFT);
+	glutAddMenuEntry("Right", MOVE_RIGHT);
 		
 	main_menu = glutCreateMenu(processMainMenu);
 	if(!col){
@@ -503,6 +542,7 @@ void createMenu()
 		glutAddSubMenu("Line type", type_menu);//добавить подменю
 		glutAddSubMenu("Line thickness", width_menu);
 		glutAddSubMenu("Line color", color_menu);
+		glutAddSubMenu("Move primitive", move_menu);
 		glutAddMenuEntry("Change point in primitive", change_point);
 		glutAddMenuEntry("Change  color of point in primitive", change_point_color);
 	}

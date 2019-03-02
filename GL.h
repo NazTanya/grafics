@@ -29,17 +29,18 @@ using namespace std;
 #define BLACK   7
 #define PINK   8
 
+//константы для перемещения
+#define MOVE_UP		1
+#define MOVE_DOWN	2
+#define MOVE_LEFT	3
+#define MOVE_RIGHT	4
+
+
 
 int max_group;                  //максимальный порядковый номер набора (число наборов-1)
 
 GLint Width = 512, Height = 512;
 
-//class color
-//{
-//public:
-//	GLint red, blue, green;
-//	color(GLint r, GLint b, GLint g) { red = r; blue = b; green = g; };
-//};
 
 struct point {
 	GLint x, y;
@@ -47,16 +48,11 @@ struct point {
 	point(GLint _x, GLint _y,GLint r, GLint b, GLint g) { red = r; blue = b; green = g; x = _x, y = _y;};
 };
 
-
 struct line
 {
 public:
 	vector <point> coordinates;
 };
-
-
-
-
 
 class linetype
 {
@@ -68,7 +64,6 @@ public:
 
 int active;							//текущая ломанная
 vector <line> v;					//вектор ломаных
-//vector <color> colors;			//вектор цветов для ломанных
 vector <linetype> lineTypeVec;		//вектор типов линий для ломанных
 bool k = false;						//для новой ломаной
 bool z = false;						//для изменения точки в примитиве
