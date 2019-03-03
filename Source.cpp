@@ -66,6 +66,53 @@ void MoveRight() {
 		v[active].coordinates[j].x += 5;
 }
 
+//уменьшаем толщну линии
+void Make_Width_Less() {
+	if (lineTypeVec[active].width - 0.5 > 0)
+		lineTypeVec[active].width -= 0.5;
+}
+
+//увеличиваем толщину линии
+void Make_Width_More() {
+	if (lineTypeVec[active].width + 0.5 < 4.0)
+		lineTypeVec[active].width += 0.5;
+}
+
+//сплошная линия
+void Solid_Line(){
+	lineTypeVec[active].type = 0xFFFF;
+
+}
+
+//точечная линия
+void Dot_Line(){
+	lineTypeVec[active].type = 0x0101;
+
+}
+
+//пунктирная лиииния
+void Dash_Line() {
+	lineTypeVec[active].type = 0x00F0;
+
+}
+
+//точечно-пунктирная линия
+void Dotdash_Line() {
+	lineTypeVec[active].type = 0x1C47;
+}
+
+//удаление примитива
+void Delete_Last_Primitive() {
+	if (active == v.size() - 1)
+		active--;
+	v.pop_back();
+}
+
+//удаление последней точки в примитиве
+void Delete_Last_Point() {
+	v[active].coordinates.pop_back();
+}
+
 //processing the message from keyboard
 void Keyboard_normal(unsigned char key, int x, int y) {
 	GLint max = 0, min = 255;
@@ -133,16 +180,14 @@ void Keyboard_normal(unsigned char key, int x, int y) {
 	}
 
 	//changing the width of line
-	if (key == 'x')
-		if (lineTypeVec[active].width - 0.5 > 0) lineTypeVec[active].width -= 0.5;
-	if (key == 'c')
-		if (lineTypeVec[active].width + 0.5 < 4.0) lineTypeVec[active].width += 0.5;
+	if (key == 'x')		Make_Width_Less();
+	if (key == 'c')		Make_Width_More();
 
 	//changing the type of line
-	if (key == 49)		lineTypeVec[active].type = 0xFFFF;
-	if (key == 50)		lineTypeVec[active].type = 0x0101;
-	if (key == 51)		lineTypeVec[active].type = 0x00F0;
-	if (key == 52)		lineTypeVec[active].type = 0x1C47;
+	if (key == 49)		Solid_Line();
+	if (key == 50)		Dot_Line();
+	if (key == 51)		Dash_Line();
+	if (key == 52)		Dotdash_Line();
 
 	//changing the position of points
 	if (key == 'w')		MoveUp();
@@ -150,16 +195,12 @@ void Keyboard_normal(unsigned char key, int x, int y) {
 	if (key == 'a')		MoveLeft();
 	if (key == 'd')		MoveRight();
 
-	//deleteDelete_Group();
-	if (key == 127) {
-		if (active == v.size() - 1) 
-			active--;
-		v.pop_back();
-	}
+	//Delete Group
+	if (key == 127)		Delete_Last_Primitive();
 
 	//backspace delete last point in primitive
-	if (key == 8)
-		v[active].coordinates.pop_back();
+	if (key == 8)		Delete_Last_Point();
+		
 
 	//finish primitive
 	if (key == 'z')
@@ -209,7 +250,7 @@ void processChangePointMenu(point p) {
 
 //
 void LoadTextures() {
-	unsigned int  tex;
+	/*unsigned int  tex;
 	AUX_RGBImageRec* image;
 	image = auxDIBImageLoad("image.bmp");
 	//int width, height; // разрешение текстуры (ширина и высота)
@@ -227,7 +268,7 @@ void LoadTextures() {
 	glTexCoord2d(0, 1); glVertex3d(-5, 5, -0.1);
 	glTexCoord2d(1, 1); glVertex3d(5, 5, -0.1);
 	glTexCoord2d(1, 0); glVertex3d(5, -5, -0.1);
-	glEnd();
+	glEnd();*/
 }
 
 //processing the message from mouse
@@ -352,19 +393,19 @@ void processColorMenu(int option) {
 void processTypeMenu(int option) {
 	switch (option) {
 	case SOLID: {
-		lineTypeVec[active].type = 0xFFFF;
+		Solid_Line();
 		break;
 	}
 	case DOT: {
-		lineTypeVec[active].type = 0x0101;
+		Dot_Line();
 		break;
 	}
 	case DASH: {
-		lineTypeVec[active].type = 0x00F0;
+		Dash_Line();
 		break;
 	}
 	case DOTDASH: {
-		lineTypeVec[active].type = 0x1C47;
+		Dotdash_Line();
 		break;
 	}
 	}
@@ -448,6 +489,9 @@ void processMainMenu(int option) {
 		v[active].coordinates[ch_point].blue = 203;
 		col = false;
 	}
+	if (option == 84)	Delete_Last_Point();
+	if (option == 56)	Delete_Last_Primitive();
+	glutPostRedisplay();
 }
 
 //подменю для толщины линий
@@ -492,13 +536,8 @@ void processWidthMenu(int option) {
 //подпрограмма созданиия меню
 void createMenu()
 {
-	int main_menu;
-	int width_menu;
-	int color_menu;
-	int type_menu;
-	int move_menu;
-	int change_point = 204;
-	int change_point_color = 18;
+	int main_menu, width_menu, color_menu, type_menu, move_menu;
+	int change_point = 204, change_point_color = 18, delete_point = 84, delete_primitive = 56;
 
 	//подменю тип линии
 	type_menu = glutCreateMenu(processTypeMenu);
@@ -544,6 +583,8 @@ void createMenu()
 		glutAddSubMenu("Line color", color_menu);
 		glutAddSubMenu("Move primitive", move_menu);
 		glutAddMenuEntry("Change point in primitive", change_point);
+		glutAddMenuEntry("Delete last point in primitive", delete_point);
+		glutAddMenuEntry("Delete last primitive", delete_primitive);
 		glutAddMenuEntry("Change  color of point in primitive", change_point_color);
 	}
 	else
