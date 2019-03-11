@@ -1,5 +1,5 @@
 #include<GL\glut.h>
-#include"glaux.h"
+//#include"glaux.h"
 #include <vector>
 using namespace std;
 
@@ -34,6 +34,12 @@ using namespace std;
 #define MOVE_DOWN	2
 #define MOVE_LEFT	3
 #define MOVE_RIGHT	4
+
+//константы для фона
+#define NO		0
+#define SEA		1
+#define SKY		2
+#define SPACE	3
 
 
 
@@ -70,5 +76,7 @@ bool z = false;						//для изменения точки в примитиве
 int x12 = 0;						//счетчик для изменения точки
 int ch_point;						//новые координаты
 bool col = false;					//для измененияцвета точки
+int change_color;					//запоминаем цвет на который изменяем
+unsigned int names[10];
 
 

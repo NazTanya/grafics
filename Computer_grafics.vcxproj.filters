@@ -25,7 +25,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="image.bmp">
+    <Image Include="sky.jpg">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="space.jpg">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="sea.bmp">
       <Filter>Файлы ресурсов</Filter>
     </Image>
   </ItemGroup>

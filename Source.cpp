@@ -1,10 +1,25 @@
+#include<stdlib.h>
+#include<stdio.h>
 #include"GL.h"
-#include"glaux.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include"stb_image.h"
+#pragma comment (lib,"glaux.lib")
 
 //output into display
 void Display(void) {
 	glClearColor(1.0, 1.0, 1.0, 1);
+	glColor3ub(255, 255, 255);
 	glClear(GL_COLOR_BUFFER_BIT);
+	{
+		glEnable(GL_TEXTURE_2D);
+		glBegin(GL_QUADS);
+		glTexCoord2d(0, 0); glVertex3d(0, 0, -0.1);
+		glTexCoord2d(0, 1); glVertex3d(0, Width, -0.1);
+		glTexCoord2d(1, 1); glVertex3d(Height, Width, -0.1);
+		glTexCoord2d(1, 0); glVertex3d(Height, 0, -0.1);
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
+	}
 	glPointSize(6);
 	glEnable(GL_POINT_SMOOTH);
 	// тип примитива - незамкнутая линия
@@ -248,27 +263,78 @@ void processChangePointMenu(point p) {
 	}
 }
 
-//
+//загрузка текстур 
 void LoadTextures() {
-	/*unsigned int  tex;
-	AUX_RGBImageRec* image;
-	image = auxDIBImageLoad("image.bmp");
-	//int width, height; // разрешение текстуры (ширина и высота)
-	unsigned char *pixels; // массив пикселей текстуры
-	//if (!LoadTextureFromFile("image.bmp", width, height,pixels)) return;
-	unsigned int names[10];
+	unsigned int  sea_tex, sky_tex, space_tex;
+	int w1;
+	int h1;
+	int comp1;
 	glGenTextures(10, names);
-	glGenTextures(1, &tex);
-	glBindTexture(GL_TEXTURE_2D, tex);
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 3,image->sizeX, image->sizeY, GL_RGB, GL_UNSIGNED_BYTE, image->data);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-	glEnable(GL_TEXTURE_2D);
-	glBegin(GL_QUADS);
-	glTexCoord2d(0, 0); glVertex3d(-5, -5, -0.1);
-	glTexCoord2d(0, 1); glVertex3d(-5, 5, -0.1);
-	glTexCoord2d(1, 1); glVertex3d(5, 5, -0.1);
-	glTexCoord2d(1, 0); glVertex3d(5, -5, -0.1);
-	glEnd();*/
+	unsigned char* image1 = stbi_load("sea.bmp", &w1, &h1, &comp1, STBI_rgb);
+	glBindTexture(GL_TEXTURE_2D, names[0]);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, w1, h1, GL_RGB, GL_UNSIGNED_BYTE, image1);
+
+	
+	unsigned char* image2 = stbi_load("sky.jpg", &w1, &h1, &comp1, STBI_rgb);
+	glBindTexture(GL_TEXTURE_2D, names[1]);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, w1, h1, GL_RGB, GL_UNSIGNED_BYTE, image2);
+
+	unsigned char* image3 = stbi_load("space.jpg", &w1, &h1, &comp1, STBI_rgb);
+	glBindTexture(GL_TEXTURE_2D, names[2]);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, w1, h1, GL_RGB, GL_UNSIGNED_BYTE, image3);
+}
+
+//меню для цета точки
+void Point_Color() {
+	switch (change_color) {
+	case RED: {
+		v[active].coordinates[ch_point].red = 193;
+		v[active].coordinates[ch_point].green = 0;
+		v[active].coordinates[ch_point].blue = 32;
+		break; }
+	case BLUE: {
+		v[active].coordinates[ch_point].red = 66;
+		v[active].coordinates[ch_point].green = 170;
+		v[active].coordinates[ch_point].blue = 255;
+		break; }
+	case GREEN: {
+		v[active].coordinates[ch_point].red = 0;
+		v[active].coordinates[ch_point].green = 128;
+		v[active].coordinates[ch_point].blue = 0;
+		break;
+	}
+	case ORANGE: {
+		v[active].coordinates[ch_point].red = 255;
+		v[active].coordinates[ch_point].green = 165;
+		v[active].coordinates[ch_point].blue = 0;
+		break;
+	}
+	case YELLOW: {
+		v[active].coordinates[ch_point].red = 255;
+		v[active].coordinates[ch_point].green = 255;
+		v[active].coordinates[ch_point].blue = 0;
+		break;
+	}
+	case VIOLET: {
+		v[active].coordinates[ch_point].red = 139;
+		v[active].coordinates[ch_point].green = 0;
+		v[active].coordinates[ch_point].blue = 255;
+		break;
+	}
+	case BLACK: {
+		v[active].coordinates[ch_point].red = 0;
+		v[active].coordinates[ch_point].green = 0;
+		v[active].coordinates[ch_point].blue = 0;
+		break;
+	}
+	case PINK: {
+		v[active].coordinates[ch_point].red = 255;
+		v[active].coordinates[ch_point].green = 192;
+		v[active].coordinates[ch_point].blue = 203;
+		break;
+	}
+	}
+	//glutPostRedisplay();
 }
 
 //processing the message from mouse
@@ -309,12 +375,14 @@ void Mouse(int button, int state, int x, int y) {
 		if (col)
 		{
 			processChangePointMenu(p);
+			Point_Color();
 		}
 		if(!z && !col)
 			v[active].coordinates.push_back(p);
-		if (x12 == 2){
+		if (x12 == 2 || col){
 			x12 = 0;
 			z = false;
+			col = false;
 		}
 	}
 	glutPostRedisplay();
@@ -439,8 +507,8 @@ void processMoveMenu(int option) {
 void processMainMenu(int option) {
 	if (option == 204)
 		z = true;
-	if (option == 18)
-		col = true;
+	//if (option == 18)
+	//	col = true;
 	if (option == 1){
 		v[active].coordinates[ch_point].red = 193;
 		v[active].coordinates[ch_point].green = 0;
@@ -533,11 +601,47 @@ void processWidthMenu(int option) {
 	glutPostRedisplay();
 }
 
+//подменю для изменения цветта точки
+void processChangeColorMenu(int option) {
+	col = true;
+	change_color = option;
+}
+
+// подменю для фона
+void processBackMenu(int option) {
+	switch (option) {
+	case NO: {
+		glBindTexture(GL_TEXTURE_2D, NULL);
+		break;
+	}
+	case SEA: {
+		glBindTexture(GL_TEXTURE_2D, names[0]);
+		break;
+	}
+	case SKY: {
+		glBindTexture(GL_TEXTURE_2D, names[1]);
+		break;
+	}
+	case SPACE: {
+		glBindTexture(GL_TEXTURE_2D, names[2]);
+		break;
+	}
+	}
+	glutPostRedisplay();
+}
+
 //подпрограмма созданиия меню
 void createMenu()
 {
-	int main_menu, width_menu, color_menu, type_menu, move_menu;
+	int main_menu, width_menu, color_menu, type_menu, move_menu, change_back_ground;
 	int change_point = 204, change_point_color = 18, delete_point = 84, delete_primitive = 56;
+
+	//подменю фон
+	change_back_ground = glutCreateMenu(processBackMenu);
+	glutAddMenuEntry("No back", NO);//добавить пункты подменю
+	glutAddMenuEntry("Sea", SEA);
+	glutAddMenuEntry("Sky", SKY);
+	glutAddMenuEntry("Space", SPACE);
 
 	//подменю тип линии
 	type_menu = glutCreateMenu(processTypeMenu);
@@ -575,34 +679,33 @@ void createMenu()
 	glutAddMenuEntry("Left", MOVE_LEFT);
 	glutAddMenuEntry("Right", MOVE_RIGHT);
 		
+
+	//подменю изменения цвета точки
+	change_point_color = glutCreateMenu(processChangeColorMenu);
+	glutAddMenuEntry("Red", RED);//добавить пункты подменю
+	glutAddMenuEntry("Blue", BLUE);
+	glutAddMenuEntry("Green", GREEN);
+	glutAddMenuEntry("Orange", ORANGE);
+	glutAddMenuEntry("Yellow", YELLOW);
+	glutAddMenuEntry("Violet", VIOLET);
+	glutAddMenuEntry("Black", BLACK);
+	glutAddMenuEntry("Pink", PINK);
+
+	//главное меню
 	main_menu = glutCreateMenu(processMainMenu);
-	if(!col){
-		//главное меню
-		glutAddSubMenu("Line type", type_menu);//добавить подменю
-		glutAddSubMenu("Line thickness", width_menu);
-		glutAddSubMenu("Line color", color_menu);
-		glutAddSubMenu("Move primitive", move_menu);
-		glutAddMenuEntry("Change point in primitive", change_point);
-		glutAddMenuEntry("Delete last point in primitive", delete_point);
-		glutAddMenuEntry("Delete last primitive", delete_primitive);
-		glutAddMenuEntry("Change  color of point in primitive", change_point_color);
-	}
-	else
-	{
-		//для поточечного изменения цвета
-		glutAddMenuEntry("Red", RED);//добавить пункты подменю
-		glutAddMenuEntry("Blue", BLUE);
-		glutAddMenuEntry("Green", GREEN);
-		glutAddMenuEntry("Orange", ORANGE);
-		glutAddMenuEntry("Yellow", YELLOW);
-		glutAddMenuEntry("Violet", VIOLET);
-		glutAddMenuEntry("Black", BLACK);
-		glutAddMenuEntry("Pink", PINK);
-	}
+	glutAddSubMenu("Line type", type_menu);//добавить подменю
+	glutAddSubMenu("Line thickness", width_menu);
+	glutAddSubMenu("Line color", color_menu);
+	glutAddSubMenu("Move primitive", move_menu);
+	glutAddMenuEntry("Change point in primitive", change_point);
+	glutAddMenuEntry("Delete last point in primitive", delete_point);
+	glutAddMenuEntry("Delete last primitive", delete_primitive);
+	glutAddSubMenu("Change  color of point in primitive", change_point_color);
+	glutAddSubMenu("Change  back_ground", change_back_ground);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);//прикрепить меню к правой кнопке мыши
 }
 
-//
+//главное меню
 void main(int argc, char *argv[]) {
 	//уставить начальные размеры окна
 	v.resize(1);
@@ -612,6 +715,7 @@ void main(int argc, char *argv[]) {
 	glutInitWindowSize(Width, Height);
 	glutCreateWindow("GL_LINE_STRIP");
 	LoadTextures();
+	glBindTexture(GL_TEXTURE_2D, NULL);
 	//добавить "тип линии и толщину по умолчанию" для нулевого набора
 	lineTypeVec.push_back(linetype(1.0, 0xFFFF, active));
 	createMenu();									//создание меню

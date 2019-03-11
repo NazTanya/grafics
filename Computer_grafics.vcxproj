@@ -119,7 +119,9 @@
     <ClInclude Include="GL.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="image.bmp" />
+    <Image Include="sea.bmp" />
+    <Image Include="sky.jpg" />
+    <Image Include="space.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
