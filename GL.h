@@ -41,7 +41,15 @@ using namespace std;
 #define SKY		2
 #define SPACE	3
 
+//константы для фона
+#define NO		0
+#define EXP		1
+#define EXP2	2
+#define LINEAR	3
 
+//константы для вращения
+#define WISE		1
+#define ANTIWISE	2
 
 int max_group;                  //максимальный порядковый номер набора (число наборов-1)
 
@@ -49,9 +57,10 @@ GLint Width = 512, Height = 512;
 
 
 struct point {
-	GLint x, y;
+	GLfloat x, y;
 	GLint red, blue, green;
 	point(GLint _x, GLint _y,GLint r, GLint b, GLint g) { red = r; blue = b; green = g; x = _x, y = _y;};
+	point() { };
 };
 
 struct line
@@ -68,6 +77,7 @@ public:
 	linetype(float _width, unsigned short _type, int _gr) { width = _width; type = _type; }; 
 };
 
+point center_mass;
 int active;							//текущая ломанная
 vector <line> v;					//вектор ломаных
 vector <linetype> lineTypeVec;		//вектор типов линий для ломанных
@@ -77,6 +87,10 @@ int x12 = 0;						//счетчик для изменения точки
 int ch_point;						//новые координаты
 bool col = false;					//для измененияцвета точки
 int change_color;					//запоминаем цвет на который изменяем
-unsigned int names[10];
+unsigned int names[10];				//массив текстур
+bool fog;
+int _fog;
+float fogcolor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+
 
 

@@ -1,5 +1,6 @@
 #include<stdlib.h>
 #include<stdio.h>
+#include<math.h>
 #include"GL.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include"stb_image.h"
@@ -42,6 +43,48 @@ void Display(void) {
 		}
 		glEnd();
 	}
+	if (fog) {
+		switch (_fog) {
+		case 1: {
+			// Установим цвет мира таким же, как цвет тумана:
+			//glClearColor(0.5, 0.5, 0.5, 1);
+			glEnable(GL_FOG);
+			//glFogfv(GL_FOG_COLOR, fogcolor);
+			glFogi(GL_FOG_MODE, GL_EXP);
+			glFogfv(GL_FOG_COLOR, fogcolor);
+			glFogf(GL_FOG_DENSITY, -1.0f);
+			//glHint(GL_FOG_HINT, GL_DONT_CARE);
+			//glEnable(GL_FOG);
+			break;
+		}
+		case 2: {
+			// Установим цвет мира таким же, как цвет тумана:
+			//glClearColor(0, 0, 1, 1);
+			glEnable(GL_FOG);
+			glFogi(GL_FOG_MODE, GL_EXP2);
+			glFogfv(GL_FOG_COLOR, fogcolor);
+			glFogf(GL_FOG_DENSITY, 0.5f);
+			//glHint(GL_FOG_HINT, GL_DONT_CARE);
+			glFogf(GL_FOG_START, 1.0f); // Глубина, с которой начинается туман 
+			glFogf(GL_FOG_END, 5.0f); // Глубина, где туман заканчивается.
+			//glEnable(GL_FOG);
+			break;
+		}
+		case 3: {
+			// Установим цвет мира таким же, как цвет тумана:
+			//glClearColor(0, 0, 1, 1);
+			glEnable(GL_FOG);
+			glFogi(GL_FOG_MODE, GL_LINEAR);
+			glFogfv(GL_FOG_COLOR, fogcolor);
+			glFogf(GL_FOG_DENSITY, 1.0f);
+			glFogf(GL_FOG_START, 1.0f); // Глубина, с которой начинается туман 
+			glFogf(GL_FOG_END, 5.0f); // Глубина, где туман заканчивается.
+			//glHint(GL_FOG_HINT, GL_DONT_CARE);
+			//glEnable(GL_FOG);
+			break;
+		}
+		}
+	}
 	glFinish();
 }
 
@@ -52,9 +95,10 @@ void Reshape(GLint w, GLint h) {
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0, w, 0, h);
+	glOrtho(0, w, 0, h, -1.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	glutPostRedisplay();
 }
 
 //перемещение примитива вверх
@@ -102,13 +146,11 @@ void Solid_Line(){
 //точечная линия
 void Dot_Line(){
 	lineTypeVec[active].type = 0x0101;
-
 }
 
 //пунктирная лиииния
 void Dash_Line() {
 	lineTypeVec[active].type = 0x00F0;
-
 }
 
 //точечно-пунктирная линия
@@ -126,6 +168,33 @@ void Delete_Last_Primitive() {
 //удаление последней точки в примитиве
 void Delete_Last_Point() {
 	v[active].coordinates.pop_back();
+}
+
+//вычисление центра масс
+void Calc_Center_Mass() {
+	int i = 0;
+	for (; i < v[active].coordinates.size(); i++) {
+		center_mass.x += v[active].coordinates[i].x;
+		center_mass.y += v[active].coordinates[i].y;
+	}
+	center_mass.x /= i;
+	center_mass.y /= i;
+}
+
+//вращение фигуры вокруг центра масс
+void Rotation_of_figure(float angle) {
+	Calc_Center_Mass();
+	double cos_ = cos(angle);
+	double sin_ = sin(angle);
+	double x_, y_;
+	double dist = sqrt(pow(center_mass.x, 2) + pow(center_mass.y, 2));
+	for (int i = 0; i < v[active].coordinates.size(); i++) {
+		x_ = v[active].coordinates[i].x;
+		y_ = v[active].coordinates[i].y;
+
+		v[active].coordinates[i].x = center_mass.x + (x_ - center_mass.x) * cos_ - (y_ - center_mass.y) * sin_;
+		v[active].coordinates[i].y = center_mass.y + (x_ - center_mass.x) * sin_ + (y_ - center_mass.y) * cos_;
+	}
 }
 
 //processing the message from keyboard
@@ -210,6 +279,10 @@ void Keyboard_normal(unsigned char key, int x, int y) {
 	if (key == 'a')		MoveLeft();
 	if (key == 'd')		MoveRight();
 
+	//rotation the figure
+	if (key == 'o') 	Rotation_of_figure(10);
+	if (key == 'p') 	Rotation_of_figure(-10);
+		
 	//Delete Group
 	if (key == 127)		Delete_Last_Primitive();
 
@@ -480,6 +553,32 @@ void processTypeMenu(int option) {
 	glutPostRedisplay();
 }
 
+// подменю для тумана
+void processFog(int option) {
+	switch (option) {
+	case EXP: {
+		fog = true;
+		_fog = 1;
+		break;
+	}
+	case EXP2: {
+		fog = true;
+		_fog = 2;
+		break;
+	}
+	case LINEAR: {
+		fog = true;
+		_fog = 3;
+		break;
+	}
+	case NO: {
+		fog = false;
+		break;
+	}
+	}
+	glutPostRedisplay();
+}
+
 //подменю перемещений
 void processMoveMenu(int option) {
 	switch (option) {
@@ -630,29 +729,51 @@ void processBackMenu(int option) {
 	glutPostRedisplay();
 }
 
+// подменю для фона
+void processRotMenu(int option) {
+	switch (option) {
+	case WISE: {
+		Rotation_of_figure(10);
+		break;
+	}
+	case ANTIWISE: {
+		Rotation_of_figure(-10);
+		break;
+	}
+	}
+	glutPostRedisplay();
+}
+
 //подпрограмма созданиия меню
 void createMenu()
 {
-	int main_menu, width_menu, color_menu, type_menu, move_menu, change_back_ground;
+	int main_menu, width_menu, color_menu, type_menu, move_menu, change_back_ground, fog_menu, rot_menu;
 	int change_point = 204, change_point_color = 18, delete_point = 84, delete_primitive = 56;
 
 	//подменю фон
 	change_back_ground = glutCreateMenu(processBackMenu);
-	glutAddMenuEntry("No back", NO);//добавить пункты подменю
+	glutAddMenuEntry("No back", NO);
 	glutAddMenuEntry("Sea", SEA);
 	glutAddMenuEntry("Sky", SKY);
 	glutAddMenuEntry("Space", SPACE);
+	
+	//подменю туман
+	fog_menu = glutCreateMenu(processFog);
+	glutAddMenuEntry("No fog", NO);
+	glutAddMenuEntry("Mist", EXP);
+	glutAddMenuEntry("Fog", EXP2);
+	glutAddMenuEntry("Smoge", LINEAR);
 
 	//подменю тип линии
 	type_menu = glutCreateMenu(processTypeMenu);
-	glutAddMenuEntry("Solid", SOLID);//добавить пункты подменю
+	glutAddMenuEntry("Solid", SOLID);
 	glutAddMenuEntry("Dot", DOT);
 	glutAddMenuEntry("Dash", DASH);
 	glutAddMenuEntry("Dotdash", DOTDASH);
 
 	//подменю толщина линии
 	width_menu = glutCreateMenu(processWidthMenu);
-	glutAddMenuEntry("0.5", WIDTH_0_5);//добавить пункты подменю
+	glutAddMenuEntry("0.5", WIDTH_0_5);
 	glutAddMenuEntry("1.0", WIDTH_1);
 	glutAddMenuEntry("1.5", WIDTH_1_5);
 	glutAddMenuEntry("2.0", WIDTH_2);
@@ -663,7 +784,7 @@ void createMenu()
 
 	//подменю цвет
 	color_menu = glutCreateMenu(processColorMenu);
-	glutAddMenuEntry("Red", RED);//добавить пункты подменю
+	glutAddMenuEntry("Red", RED);
 	glutAddMenuEntry("Blue", BLUE);
 	glutAddMenuEntry("Green", GREEN);
 	glutAddMenuEntry("Orange", ORANGE);
@@ -674,15 +795,19 @@ void createMenu()
 
 	//подменю перемещения
 	move_menu = glutCreateMenu(processMoveMenu);
-	glutAddMenuEntry("Up", MOVE_UP);//добавить пункты подменю
+	glutAddMenuEntry("Up", MOVE_UP);
 	glutAddMenuEntry("Down", MOVE_DOWN);
 	glutAddMenuEntry("Left", MOVE_LEFT);
 	glutAddMenuEntry("Right", MOVE_RIGHT);
 		
+	//подменю для вращения 
+	rot_menu = glutCreateMenu(processRotMenu);
+	glutAddMenuEntry("Clockwise", WISE);
+	glutAddMenuEntry("Anticlockwise", ANTIWISE);
 
 	//подменю изменения цвета точки
 	change_point_color = glutCreateMenu(processChangeColorMenu);
-	glutAddMenuEntry("Red", RED);//добавить пункты подменю
+	glutAddMenuEntry("Red", RED);
 	glutAddMenuEntry("Blue", BLUE);
 	glutAddMenuEntry("Green", GREEN);
 	glutAddMenuEntry("Orange", ORANGE);
@@ -693,7 +818,7 @@ void createMenu()
 
 	//главное меню
 	main_menu = glutCreateMenu(processMainMenu);
-	glutAddSubMenu("Line type", type_menu);//добавить подменю
+	glutAddSubMenu("Line type", type_menu);
 	glutAddSubMenu("Line thickness", width_menu);
 	glutAddSubMenu("Line color", color_menu);
 	glutAddSubMenu("Move primitive", move_menu);
@@ -702,6 +827,8 @@ void createMenu()
 	glutAddMenuEntry("Delete last primitive", delete_primitive);
 	glutAddSubMenu("Change  color of point in primitive", change_point_color);
 	glutAddSubMenu("Change  back_ground", change_back_ground);
+	glutAddSubMenu("Rotation of figure", rot_menu);
+	glutAddSubMenu("Add fog", fog_menu);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);//прикрепить меню к правой кнопке мыши
 }
 
@@ -713,6 +840,7 @@ void main(int argc, char *argv[]) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);      //один буфер отрисовки окна, использование всех компонент RGB
 	glutInitWindowSize(Width, Height);
+
 	glutCreateWindow("GL_LINE_STRIP");
 	LoadTextures();
 	glBindTexture(GL_TEXTURE_2D, NULL);
