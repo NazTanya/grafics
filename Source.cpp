@@ -15,9 +15,9 @@ void Display(void) {
 		glEnable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 		glTexCoord2d(0, 0); glVertex3d(0, 0, -0.1);
-		glTexCoord2d(0, 1); glVertex3d(0, Width, -0.1);
-		glTexCoord2d(1, 1); glVertex3d(Height, Width, -0.1);
-		glTexCoord2d(1, 0); glVertex3d(Height, 0, -0.1);
+		glTexCoord2d(0, 1); glVertex3d(0, Height, -0.1);
+		glTexCoord2d(1, 1); glVertex3d(Width, Height, -0.1);
+		glTexCoord2d(1, 0); glVertex3d(Width, 0, -0.1);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
 	}
@@ -46,41 +46,32 @@ void Display(void) {
 	if (fog) {
 		switch (_fog) {
 		case 1: {
-			// Установим цвет мира таким же, как цвет тумана:
-			//glClearColor(0.5, 0.5, 0.5, 1);
+			glDisable(GL_FOG);
 			glEnable(GL_FOG);
-			//glFogfv(GL_FOG_COLOR, fogcolor);
 			glFogi(GL_FOG_MODE, GL_EXP);
 			glFogfv(GL_FOG_COLOR, fogcolor);
-			glFogf(GL_FOG_DENSITY, -1.0f);
-			//glHint(GL_FOG_HINT, GL_DONT_CARE);
-			//glEnable(GL_FOG);
+			glFogf(GL_FOG_DENSITY, 0.25);
 			break;
 		}
 		case 2: {
-			// Установим цвет мира таким же, как цвет тумана:
-			//glClearColor(0, 0, 1, 1);
+			glDisable(GL_FOG);
 			glEnable(GL_FOG);
 			glFogi(GL_FOG_MODE, GL_EXP2);
 			glFogfv(GL_FOG_COLOR, fogcolor);
 			glFogf(GL_FOG_DENSITY, 0.5f);
-			//glHint(GL_FOG_HINT, GL_DONT_CARE);
+			glHint(GL_FOG_HINT, GL_DONT_CARE);
 			glFogf(GL_FOG_START, 1.0f); // Глубина, с которой начинается туман 
 			glFogf(GL_FOG_END, 5.0f); // Глубина, где туман заканчивается.
-			//glEnable(GL_FOG);
 			break;
 		}
 		case 3: {
-			// Установим цвет мира таким же, как цвет тумана:
-			//glClearColor(0, 0, 1, 1);
+			glDisable(GL_FOG);
 			glEnable(GL_FOG);
 			glFogi(GL_FOG_MODE, GL_LINEAR);
 			glFogfv(GL_FOG_COLOR, fogcolor);
-			glFogf(GL_FOG_DENSITY, 1.0f);
+			glFogf(GL_FOG_DENSITY, 0.75f);
 			glFogf(GL_FOG_START, 1.0f); // Глубина, с которой начинается туман 
 			glFogf(GL_FOG_END, 5.0f); // Глубина, где туман заканчивается.
-			//glHint(GL_FOG_HINT, GL_DONT_CARE);
-			//glEnable(GL_FOG);
 			break;
 		}
 		}
@@ -95,7 +86,7 @@ void Reshape(GLint w, GLint h) {
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0, w, 0, h, -1.0, 1.0);
+	glOrtho(0, w, 0, h, -1000., 1000.);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glutPostRedisplay();
@@ -173,6 +164,9 @@ void Delete_Last_Point() {
 //вычисление центра масс
 void Calc_Center_Mass() {
 	int i = 0;
+	center_mass.x = 0;
+	center_mass.y = 0;	
+	
 	for (; i < v[active].coordinates.size(); i++) {
 		center_mass.x += v[active].coordinates[i].x;
 		center_mass.y += v[active].coordinates[i].y;
@@ -187,13 +181,12 @@ void Rotation_of_figure(float angle) {
 	double cos_ = cos(angle);
 	double sin_ = sin(angle);
 	double x_, y_;
-	double dist = sqrt(pow(center_mass.x, 2) + pow(center_mass.y, 2));
 	for (int i = 0; i < v[active].coordinates.size(); i++) {
-		x_ = v[active].coordinates[i].x;
-		y_ = v[active].coordinates[i].y;
+		x_ = v[active].coordinates[i].x - center_mass.x;
+		y_ = v[active].coordinates[i].y - center_mass.y;
 
-		v[active].coordinates[i].x = center_mass.x + (x_ - center_mass.x) * cos_ - (y_ - center_mass.y) * sin_;
-		v[active].coordinates[i].y = center_mass.y + (x_ - center_mass.x) * sin_ + (y_ - center_mass.y) * cos_;
+		v[active].coordinates[i].x = x_ * cos_ - y_ * sin_ + center_mass.x;
+		v[active].coordinates[i].y = x_ * sin_ + y_* cos_ + center_mass.y;
 	}
 }
 
@@ -289,6 +282,11 @@ void Keyboard_normal(unsigned char key, int x, int y) {
 	//backspace delete last point in primitive
 	if (key == 8)		Delete_Last_Point();
 		
+	//change OZ
+	if (key == 48)
+		glTranslatef(0, 0, 1);
+	if (key == 57)
+		glTranslatef(0, 0, -1);
 
 	//finish primitive
 	if (key == 'z')
@@ -412,13 +410,14 @@ void Point_Color() {
 
 //processing the message from mouse
 void Mouse(int button, int state, int x, int y) {
+	
 	//long push
 	if (state != GLUT_DOWN) return;
 	 
 	//new point(left key)
 	if (button == GLUT_LEFT_BUTTON) {
 		//получить координаты точки
-		point p = point((GLint)x, Height - (GLint)y,150,150,150);
+		point p = point((GLfloat)x, Height - (GLfloat)y,150,150,150);
 		//если изменяем точку в примитиве
 		if (z)
 		{
@@ -733,11 +732,11 @@ void processBackMenu(int option) {
 void processRotMenu(int option) {
 	switch (option) {
 	case WISE: {
-		Rotation_of_figure(10);
+		Rotation_of_figure(2);
 		break;
 	}
 	case ANTIWISE: {
-		Rotation_of_figure(-10);
+		Rotation_of_figure(-2);
 		break;
 	}
 	}

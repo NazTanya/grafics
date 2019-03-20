@@ -1,5 +1,4 @@
 #include<GL\glut.h>
-//#include"glaux.h"
 #include <vector>
 using namespace std;
 
@@ -51,10 +50,7 @@ using namespace std;
 #define WISE		1
 #define ANTIWISE	2
 
-int max_group;                  //максимальный порядковый номер набора (число наборов-1)
-
 GLint Width = 512, Height = 512;
-
 
 struct point {
 	GLfloat x, y;
@@ -90,7 +86,4 @@ int change_color;					//запоминаем цвет на который изменяем
 unsigned int names[10];				//массив текстур
 bool fog;
 int _fog;
-float fogcolor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-
-
-
+float fogcolor[4] = { 0.5f, 0.5f, 0.5f, 0.5f };

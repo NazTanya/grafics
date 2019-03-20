@@ -1,13 +1,12 @@
 ﻿  Source.cpp
 c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(27): warning C4018: <: несоответствие типов со знаком и без знака
 c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(40): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(106): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(112): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(118): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(124): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(178): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(193): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(209): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(110): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(116): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(122): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(128): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(183): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(198): warning C4018: <: несоответствие типов со знаком и без знака
 c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(214): warning C4018: <: несоответствие типов со знаком и без знака
 c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(219): warning C4018: <: несоответствие типов со знаком и без знака
 c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(224): warning C4018: <: несоответствие типов со знаком и без знака
@@ -19,17 +18,18 @@ c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\comp
 c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(254): warning C4018: <: несоответствие типов со знаком и без знака
 c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(259): warning C4018: <: несоответствие типов со знаком и без знака
 c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(264): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(320): warning C4018: >: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(345): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(358): warning C4101: sea_tex: неиспользованная локальная переменная
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(358): warning C4101: space_tex: неиспользованная локальная переменная
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(358): warning C4101: sky_tex: неиспользованная локальная переменная
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(485): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(492): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(499): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(507): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(515): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(523): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(531): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(539): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(269): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(315): warning C4018: >: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(340): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(353): warning C4101: sea_tex: неиспользованная локальная переменная
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(353): warning C4101: space_tex: неиспользованная локальная переменная
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(353): warning C4101: sky_tex: неиспользованная локальная переменная
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(481): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(488): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(495): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(503): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(511): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(519): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(527): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\таня\documents\visual studio 2015\projects\сomputer_grafics_1\computer_grafics\source.cpp(535): warning C4018: <: несоответствие типов со знаком и без знака
   Computer_grafics.vcxproj -> C:\Users\Таня\Documents\Visual Studio 2015\Projects\сomputer_grafics_1\Debug\Computer_grafics.exe
